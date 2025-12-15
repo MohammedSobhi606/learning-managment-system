@@ -36,7 +36,7 @@
   --sidebar-accent-foreground: oklch(0.4324 0.1531 31.4611);
   --sidebar-border: oklch(0.9315 0.0051 228.8216);
   --sidebar-ring: oklch(0.6769 0.1963 43.2953);
-  --font-sans: Farro, ui-sans-serif, sans-serif, system-ui;
+  --font-sans: Roboto, ui-sans-serif, sans-serif, system-ui;
   --font-serif: Roboto Serif, ui-serif, serif;
   --font-mono: IBM Plex Mono, ui-monospace, monospace;
   --radius: 0.2rem;

@@ -15,7 +15,7 @@ import {
   CourseSchemaType,
   CourseStatus,
 } from "@/lib/ZodSchema";
-import { ArrowLeft, Plus, PlusCircle, SparkleIcon } from "lucide-react";
+import { ArrowLeft, Loader, Plus, PlusCircle, SparkleIcon } from "lucide-react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -40,6 +40,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Tiptap from "@/components/rich-text-editor/Editor";
+import Uploader from "@/components/file-uploader/Uploader";
+import { useTransition } from "react";
+import { tryCatch } from "@/hooks/try-catch";
+import { CreateCourse } from "../coursesActions/actions";
+import { useRouter } from "next/navigation";
 export default function createCourse() {
   const form = useForm<CourseSchemaType>({
     resolver: zodResolver(courseSchema),
@@ -56,8 +61,23 @@ export default function createCourse() {
       smaleDescription: "",
     },
   });
-  function onSubmit(data: CourseSchemaType) {
-    console.log(data);
+  const router = useRouter();
+  const [isCreatingPending, startCreating] = useTransition();
+  function onSubmit(values: CourseSchemaType) {
+    startCreating(async () => {
+      const { data: respons, error } = await tryCatch(CreateCourse(values));
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      if (respons.status === "success") {
+        toast.success(respons.message);
+        form.reset();
+        router.push("/admin/courses");
+      } else if (respons.status === "error") {
+        toast.error(respons.message);
+      }
+    });
   }
 
   return (
@@ -183,13 +203,16 @@ export default function createCourse() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor={field.name}>Thumbnail URL</FieldLabel>
-                    <Input
+                    <FieldLabel htmlFor={field.name}>
+                      Thumbnail image
+                    </FieldLabel>
+                    {/* <Input
                       {...field}
                       id={field.name}
                       aria-invalid={fieldState.invalid}
                       placeholder=" Thumbnail "
-                    />
+                    /> */}
+                    <Uploader onChange={field.onChange} value={field.value} />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -345,9 +368,21 @@ export default function createCourse() {
               />
             </FieldGroup>
 
-            <Button type="submit" form={"courseForm"}>
-              Create Course
-              <PlusCircle />
+            <Button
+              disabled={isCreatingPending}
+              type="submit"
+              form={"courseForm"}
+            >
+              {isCreatingPending ? (
+                <>
+                  Loading... <Loader className="animate-spin" />
+                </>
+              ) : (
+                <>
+                  Create Course
+                  <PlusCircle />
+                </>
+              )}
             </Button>
           </form>
         </CardContent>

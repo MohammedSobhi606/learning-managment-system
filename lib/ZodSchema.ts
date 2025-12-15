@@ -10,8 +10,8 @@ export const courseSchema = z.object({
   description: z.string().min(6, { message: "desc must be more than 3 char" }),
   fileKey: z.string().min(4),
   //    because form return just strings
-  price: z.number(),
-  duration: z.number(),
+  price: z.coerce.number<number>(),
+  duration: z.coerce.number<number>(),
   level: z.enum(CourseLevels),
   category: z.enum(Categories),
   smaleDescription: z.string().min(3),
