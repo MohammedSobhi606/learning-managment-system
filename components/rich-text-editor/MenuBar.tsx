@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { Toggle, toggleVariants } from "../ui/toggle";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 export interface ToolbarButton {
   /** Lucide icon component (e.g., <Bold className="h-4 w-4" />) */
   icon: ReactNode;
@@ -158,6 +158,7 @@ export default function MenuBar({ editor }: MenuBarProps) {
       isActive: false,
     },
   ];
+
   return (
     <div className="border-b border-input rounded-t-lg p-2 bg-card flex flex-wrap gap-1 items-center">
       <div className="flex flex-wrap gap-1 items-center">
@@ -166,9 +167,9 @@ export default function MenuBar({ editor }: MenuBarProps) {
             <TooltipTrigger asChild>
               <Toggle
                 size="sm"
-                pressed={item.isActive}
+                // variant={"outline"}
                 onPressedChange={item.action}
-                className="h-9 w-9 p-0"
+                className={`${item.isActive ? "bg-primary/50!" : null}`}
                 aria-label={item.tooltip}
               >
                 {item.icon}

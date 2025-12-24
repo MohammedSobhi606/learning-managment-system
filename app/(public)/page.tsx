@@ -42,7 +42,7 @@ export default function Home() {
           <Badge variant={"outline"} className="self-center">
             The Future Of Online Education
           </Badge>
-          <h1 className="capitalize  text-4xl md:text-6xl font-bold tracking-tight">
+          <h1 className="uppercase   text-4xl md:text-6xl font-bold ">
             elevate your learning experience
           </h1>
           <p className="text-muted-foreground capitalize max-w-[700px]">

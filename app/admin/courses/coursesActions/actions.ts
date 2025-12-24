@@ -61,6 +61,8 @@ export async function adminGetCourses() {
       slug: true,
       category: true,
       duration: true,
+      description: true,
+      status: true,
     },
   });
   return courses;
@@ -95,7 +97,17 @@ export async function adminGetSingleCourse(id: string) {
       slug: true,
       category: true,
       duration: true,
+      description: true,
       status: true,
+      chapters: {
+        select: {
+          id: true,
+          title: true,
+          position: true,
+          description: true,
+          lessons: true,
+        },
+      },
     },
   });
   if (!course) {
@@ -103,3 +115,6 @@ export async function adminGetSingleCourse(id: string) {
   }
   return course;
 }
+export type AdminSingleCourseType = Awaited<
+  ReturnType<typeof adminGetSingleCourse>
+>;
