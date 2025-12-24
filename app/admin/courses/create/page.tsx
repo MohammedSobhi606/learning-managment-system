@@ -21,7 +21,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "sonner";
 import { useForm, Controller } from "react-hook-form";
-import { Form } from "@/components/ui/form";
 import {
   Field,
   FieldError,
@@ -170,7 +169,7 @@ export default function createCourse() {
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor={field.name}>
-                      smale description
+                      small description
                     </FieldLabel>
                     <Textarea
                       {...field}

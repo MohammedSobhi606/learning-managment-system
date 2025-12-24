@@ -73,26 +73,7 @@ model Verification {
 
   @@map("verification")
 }
-model Course {
-  id String @id @default(uuid())
-  title String
-  description String
-  fileKey String
-  price Int 
-  duration Int
-  level CourseLevels @default(Beginner)
-  category String
-  smaleDescription String
-  slug String @unique
-  status CourseStatus @default(Draft)
 
-
-  user User  @relation(fields:[userId],references:[id],onDelete:Cascade)
-  userId String 
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-} 
 enum CourseLevels {
  Beginner
  Intermediate
@@ -103,4 +84,65 @@ enum CourseStatus {
  Draft
  Puplished
  Archived
+}
+model Course {
+  id                String    @id @default(uuid())
+  title             String
+  description       String
+  fileKey           String    // e.g., thumbnail or cover file in storage
+  price             Int
+  duration          Int       // in minutes or hours, depending on your needs
+  level             CourseLevels @default(Beginner)
+  category          String
+  smaleDescription  String    // note: fixed typo from "smaleDescription"
+  slug              String    @unique
+  status            CourseStatus @default(Draft)
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  // One-to-many with chapters
+  chapters Chapter[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Chapter {
+  id          String @id @default(uuid())
+  title       String
+  description String?
+  position    Int    // order of the chapter in the course (1, 2, 3...)
+
+  // Relation to Course
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+
+  // One-to-many with lessons
+  lessons Lesson[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId, position]) // useful for sorting chapters by position
+}
+
+model Lesson {
+  id          String @id @default(uuid())
+  title       String
+  description String?
+  videoUrl    String?   // URL to the video (e.g., Vimeo, YouTube, or your own storage)
+  thumbnailUrl    String?   // thumbnailUrl to the video (e.g., Vimeo, YouTube, or your own storage)
+  duration    Int?      // lesson duration in minutes
+  position    Int       // order within the chapter (1, 2, 3...)
+  isFree      Boolean   @default(false) // preview lesson?
+
+  // Relation to Chapter
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapterId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([chapterId, position]) // useful for sorting lessons
 }

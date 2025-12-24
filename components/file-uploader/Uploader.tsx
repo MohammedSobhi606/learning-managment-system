@@ -11,6 +11,7 @@ import {
 } from "./RenderState";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
+import { useURL } from "@/hooks/use-constructIURL";
 
 interface ComponentProp {
   value?: string;
@@ -30,6 +31,7 @@ export default function Uploader({ onChange, value }: ComponentProp) {
     objecUrl?: string;
     fileType: "image" | "video";
   }
+
   const [fileState, setFile] = useState<UploadFileState>({
     error: false,
     file: null,
@@ -40,6 +42,7 @@ export default function Uploader({ onChange, value }: ComponentProp) {
     progress: 0,
     size: 0,
     fileKey: value,
+    objecUrl: value ? useURL(value) : undefined,
   });
   // upload function to S3
   async function uploadToS3(file: File) {
@@ -193,7 +196,7 @@ export default function Uploader({ onChange, value }: ComponentProp) {
 
   useEffect(() => {
     return () => {
-      if (fileState.objecUrl && !fileState.objecUrl.startsWith("http")) {
+      if (fileState.objecUrl && !fileState.objecUrl.startsWith("https")) {
         URL.revokeObjectURL(fileState.objecUrl);
       }
     };

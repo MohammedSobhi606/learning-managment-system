@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import User_DropDown from "./User_DropDown";
 import { authClient } from "@/lib/auht-client";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 const navItems = [
@@ -38,7 +38,7 @@ export default function Navbar() {
           <span className="font-bold">Mo-LMS.</span>
         </Link>
         {/* desktop Navs */}
-        <nav className="hidden md:flex md:items-center md:justify-between md:flex-1 border px-4 ml-2 py-1 bg-muted ">
+        <nav className="hidden md:flex md:items-center md:justify-between md:flex-1  px-4 ml-2 py-1 ">
           <div className="font-medium text-sm flex space-x-4 ">
             {navItems.map((item) => (
               <Link
@@ -57,12 +57,23 @@ export default function Navbar() {
               <User_DropDown user={session.user} />
             ) : (
               <>
-                <Button asChild variant={"secondary"}>
-                  <Link href={"/login"}>Login</Link>
-                </Button>{" "}
-                <Button asChild>
-                  <Link href={"/login"}>Get Started</Link>
-                </Button>
+                <Link
+                  className={buttonVariants({
+                    // variant: "",
+                  })}
+                  href={"/login"}
+                >
+                  Login
+                </Link>
+
+                <Link
+                  className={buttonVariants({
+                    variant: "secondary",
+                  })}
+                  href={"/login"}
+                >
+                  Get Started
+                </Link>
               </>
             )}
           </div>
